@@ -17,7 +17,7 @@ create table flight if not exists
 
 create table booking if not exists 
 (
-	book_ref varchar(6) (ticket_no ~* '^[a-zA-Z]\d{6}$'), -- A combination of 6 digits or numbers
+	book_ref varchar(6) (ticket_no ~* '([a-z]|[A-Z]|\d){6}'), -- A combination of 6 digits or numbers
 	book_date date not null,
 	total_cost demical(4,2) not null,
 
