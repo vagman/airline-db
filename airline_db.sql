@@ -1,7 +1,7 @@
 create table flight if not exists
 (
 	arrival_airport varchar(100),
-	departure_airport varchar(100),
+	departure_airport varchar(100) check (arrival_airport != departure_airport),
 	departure_date date,
 	airplane_model varchar(40) not null,
 	distance numeric(4,0) not null,
@@ -10,7 +10,7 @@ create table flight if not exists
 	scheduled_duration time not null,
 	actual_departure_time timestamp not null,
 	actual_arrival_time timestamp not null,
-	flight_status varchar(9) not null,
+	flight_status varchar(9) not null check (fare in ('Scheduled', 'OnTime', 'Delayed', 'Departed', 'Arrived', 'Cancelled')),
 
 	primary key (arrival_airport, departure_airport, departure_date)
 );
@@ -19,8 +19,9 @@ create table booking if not exists
 (
 	book_ref varchar(6) (book_red ~* '([a-z]|[A-Z]|\d){6}'), -- A combination of 6 digits or numbers
 	book_date date not null check (flight.departure_date - book_date <= 30),
-	total_cost demical(4,2) not null,
+	total_cost demical(4,2) not null check (amount > 0),
 
+	foreign key (book_ref) references ticket.book_ref on delete cascade,
 	primary key (book_ref)
 );
 
@@ -30,8 +31,9 @@ create table ticket if not exists
 	passenger_id varchar(40) not null unique,
 	passenger_name varchar(100) not null,
 	contact_data varchar(100) not null,
-	amount decimal(6,2) not null,
-	fare varchar(20) not null check (fare in ('Economy', 'Buisness', 'First class')),
+	amount decimal(6,2) not null check (amount > 0),
+	fare varchar(11) not null check (fare in ('Economy', 'Business', 'First class')),
+	book_ref varchar(6) (book_red ~* '([a-z]|[A-Z]|\d){6}')
 
 	primary key (ticket_no)
 );
@@ -58,7 +60,7 @@ create table aircraft if not exists
 
 create table airport if not exists 
 (
-	airport_code varchar(3),
+	airport_code varchar(3) check (airport_code ~* '^\w{3}$'), -- It has to be a 3 letters,
 	name varchar(40) not null,
 	city varchar(100) not null,
 	timezone timestamptz not null,
