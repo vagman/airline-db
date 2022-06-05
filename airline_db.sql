@@ -18,7 +18,7 @@ create table flight if not exists
 create table booking if not exists 
 (
 	book_ref varchar(6) (book_red ~* '([a-z]|[A-Z]|\d){6}'), -- A combination of 6 digits or numbers
-	book_date date not null,
+	book_date date not null check (flight.departure_date - book_date <= 30),
 	total_cost demical(4,2) not null,
 
 	primary key (book_ref)
@@ -31,7 +31,7 @@ create table ticket if not exists
 	passenger_name varchar(100) not null,
 	contact_data varchar(100) not null,
 	amount decimal(6,2) not null,
-	fare varchar(20) not null,
+	fare varchar(20) not null check (fare in ('Economy', 'Buisness', 'First class')),
 
 	primary key (ticket_no)
 );
