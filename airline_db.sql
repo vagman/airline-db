@@ -1,4 +1,4 @@
-create table flight if not exists
+create table if not exists flight
 (
 	arrival_airport varchar(100),
 	departure_airport varchar(100) check (arrival_airport != departure_airport),
@@ -10,37 +10,43 @@ create table flight if not exists
 	scheduled_duration time not null,
 	actual_departure_time timestamp not null,
 	actual_arrival_time timestamp not null,
-	flight_status varchar(9) not null check (fare in ('Scheduled', 'OnTime', 'Delayed', 'Departed', 'Arrived', 'Cancelled')),
+	flight_status varchar(9) not null,
 
+	check (flight_status in ('Scheduled', 'OnTime', 'Delayed', 'Departed', 'Arrived', 'Cancelled')),
 	primary key (arrival_airport, departure_airport, departure_date)
 );
 
-create table booking if not exists 
+create table if not exists booking
 (
-	book_ref varchar(6) (book_red ~* '([a-z]|[A-Z]|\d){6}'), -- A combination of 6 digits or numbers
-	book_date date not null check (flight.departure_date - book_date <= 30),
-	total_cost demical(4,2) not null check (amount > 0),
+	book_ref varchar(6),
+	book_date date not null, -- TODO: Check the flight date!
+	total_cost decimal(4,2) not null,
 
+	check (book_ref ~* '([a-z]|[A-Z]|\d){6}'), -- A combination of 6 digits or numbers
+	check (total_cost > 0),
 	foreign key (book_ref) references ticket(book_ref) on delete cascade,
 	primary key (book_ref)
 );
 
-create table ticket if not exists 
+create table if not exists ticket
 (
 	ticket_no varchar(13) check (ticket_no ~* '^\d{13}$'), -- It has to be a 13-digit number
 	passenger_id varchar(40) not null unique,
 	passenger_name varchar(100) not null,
 	contact_data varchar(100) not null,
-	amount decimal(6,2) not null check (amount > 0),
-	fare varchar(11) not null check (fare in ('Economy', 'Business', 'First class')),
-	book_ref varchar(6) (book_red ~* '([a-z]|[A-Z]|\d){6}')
+	amount decimal(6,2) not null,
+	fare varchar(11) not null,
+	book_ref varchar(6),
 
+	check (fare in ('Economy', 'Business', 'First class')),
+	check (book_ref ~* '([a-z]|[A-Z]|\d){6}'),
+	check (amount > 0),
 	foreign key (ticket_no) references boarding_pass(ticket_no) on delete cascade,
 	foreign key (ticket_no) references flight(ticket_no) on delete cascade,
 	primary key (ticket_no)
 );
 
-create table boarding_pass if not exists 
+create table if not exists boarding_pass
 (
 	flight_id varchar(40) not null,
 	seat_no varchar(3) not null,
@@ -51,7 +57,7 @@ create table boarding_pass if not exists
 	primary key (flight_id, seat_no)
 );
 
-create table aircraft if not exists 
+create table if not exists aircraft
 (
 	aircraft_code varchar(3) check (aircraft_code ~* '^\d{3}$'), -- It has to be a 3-digit number
 	model varchar(40) not null,
@@ -63,7 +69,7 @@ create table aircraft if not exists
 	primary key (aircraft_code)
 );
 
-create table airport if not exists 
+create table if not exists airport
 (
 	airport_code varchar(3) check (airport_code ~* '^\w{3}$'), -- It has to be a 3 letters,
 	name varchar(40) not null,
