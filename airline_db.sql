@@ -21,7 +21,7 @@ create table booking if not exists
 	book_date date not null check (flight.departure_date - book_date <= 30),
 	total_cost demical(4,2) not null check (amount > 0),
 
-	foreign key (book_ref) references ticket.book_ref on delete cascade,
+	foreign key (book_ref) references ticket(book_ref) on delete cascade,
 	primary key (book_ref)
 );
 
@@ -35,6 +35,8 @@ create table ticket if not exists
 	fare varchar(11) not null check (fare in ('Economy', 'Business', 'First class')),
 	book_ref varchar(6) (book_red ~* '([a-z]|[A-Z]|\d){6}')
 
+	foreign key (ticket_no) references boarding_pass(ticket_no) on delete cascade,
+	foreign key (ticket_no) references flight(ticket_no) on delete cascade,
 	primary key (ticket_no)
 );
 
@@ -45,6 +47,7 @@ create table boarding_pass if not exists
 	boarding_no serial not null,
 	passenger_name varchar(100) not null,
 	
+	foreign key (flight_id, seat_no) references flight(flight_id, seat_no) on delete cascade,
 	primary key (flight_id, seat_no)
 );
 
@@ -55,6 +58,8 @@ create table aircraft if not exists
 	capacity int not null check (capacity > 0),
 	aircraft_range numeric(4,0) not null check (aircraft_range > 0), 
 
+	foreign key (aircraft_code) references flight(aircraft_code) on delete cascade,
+	foreign key (aircraft_code) references boarding_pass(aircraft_code) on delete cascade,
 	primary key (aircraft_code)
 );
 
@@ -65,5 +70,6 @@ create table airport if not exists
 	city varchar(100) not null,
 	timezone timestamptz not null,
 
+	foreign key (airport_code) references flight(airport_code) on delete cascade,
 	primary key (airport_code)
 );
