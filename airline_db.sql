@@ -3,10 +3,12 @@ create table if not exists booking
 	book_ref varchar(6),
 	book_date date not null, -- TODO: Check the flight date!
 	total_cost decimal(4,2) not null,
-	ticket_no varchar(13),
+	ticket_no varchar(13) not null unique,
 
+	-- check (book_date <= current_date - 30),
 	check (book_ref ~* '([a-z]|[A-Z]|\d){6}'), -- A combination of 6 digits or numbers
 	check (total_cost > 0),
+
 	primary key (book_ref)
 );
 
@@ -17,7 +19,8 @@ create table if not exists boarding_pass
 	boarding_no serial not null,
 	passenger_name varchar(100) not null,
 	ticket_no varchar(13) not null unique,
-	
+	aircraft_code varchar(3) not null unique,
+
 	primary key (flight_id, seat_no)
 );
 
@@ -30,6 +33,7 @@ create table if not exists ticket
 	amount decimal(6,2) not null,
 	fare varchar(11) not null,
 	book_ref varchar(6) not null unique,
+	flight_id serial not null unique,
 
 	check (ticket_no ~* '^\d{13}$'), -- It has to be a 13-digit number
 	check (fare in ('Economy', 'Business', 'First class')),
@@ -54,8 +58,11 @@ create table if not exists flight
 	actual_departure_time timestamp not null,
 	actual_arrival_time timestamp not null,
 	flight_status varchar(9) not null,
+	aircraft_code varchar(3) not null unique,
+	airport_code varchar(3) not null unique,
 
 	check (arrival_airport != departure_airport),
+	check (scheduled_arrival_time > scheduled_departure_time),
 	check (flight_status in ('Scheduled', 'OnTime', 'Delayed', 'Departed', 'Arrived', 'Cancelled')),
 	foreign key (flight_id) references ticket(flight_id) on delete cascade,
 	primary key (flight_id)
