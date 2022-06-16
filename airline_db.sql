@@ -1,97 +1,99 @@
-create table if not exists booking
+CREATE TABLE IF NOT EXISTS booking
 (
-	book_ref varchar(6),
-	book_date date not null,
-	total_cost decimal(4,2) not null,
-	ticket_no varchar(13) not null unique,
+	book_ref VARCHAR(6),
+	book_date TIMESTAMPTZ NOT NULL;,
+	total_cost DECIMAL(6,2) NOT NULL,
+	ticket_no VARCHAR(13) NOT NULL UNIQUE,
 
-	check (book_ref ~* '([a-z]|[A-Z]|\d){6}'), -- A combination of 6 digits or numbers
-	check (total_cost > 0),
-	primary key (book_ref)
+	CHECK (book_ref ~* '([a-z]|[A-Z]|\d){6}'), -- A combination of 6 digits or numbers
+	CHECK (total_cost > 0),
+	FOREIGN KEY (book_ref)
 );
 
-create table if not exists boarding_pass
+CREATE TABLE IF NOT EXISTS boarding_pass
 (
-	flight_id varchar(40),
-	seat_no varchar(3),
-	boarding_no serial not null,
-	passenger_name varchar(100) not null,
-	ticket_no varchar(13) not null unique,
-	aircraft_code varchar(3) not null unique,
+	flight_id SERIAL,
+	seat_no VARCHAR(3),
+	boarding_no SERIAL NOT NULL,
+	passenger_name VARCHAR(100) NOT NULL,
+	ticket_no VARCHAR(13) NOT NULL unique,
+	aircraft_code VARCHAR(3) NOT NULL UNIQUE,
 
-	primary key (flight_id, seat_no)
+	FOREIGN KEY (flight_id, seat_no)
 );
 
-create table if not exists ticket
+CREATE TABLE IF NOT EXISTS ticket
 (
-	ticket_no varchar(13),
-	passenger_id varchar(40) not null unique,
-	passenger_name varchar(100) not null,
-	contact_data varchar(100) not null,
-	amount decimal(6,2) not null,
-	fare varchar(11) not null,
-	book_ref varchar(6) not null unique,
-	flight_id serial not null unique,
+	ticket_no VARCHAR(13),
+	passenger_id VARCHAR(10) NOT NULL unique,
+	passenger_name VARCHAR(100) NOT NULL,
+	contact_data VARCHAR(100) NOT NULL,
+	amount DECIMAL(6,2) NOT NULL,
+	fare VARCHAR(11) NOT NULL,
+	book_ref VARCHAR(6) NOT NULL UNIQUE,
+	flight_id INT NOT NULL UNIQUE,
 
-	check (ticket_no ~* '^\d{13}$'), -- It has to be a 13-digit number
-	check (fare in ('Economy', 'Business', 'First class')),
-	check (book_ref ~* '([a-z]|[A-Z]|\d){6}'),
-	check (amount > 0),
+	CHECK (ticket_no ~* '^\d{13}$'), -- It has to be a 13-digit number
+	CHECK (fare in ('Economy', 'Business', 'First class')),
+	CHECK (book_ref ~* '([a-z]|[A-Z]|\d){6}'),
+	CHECK (amount > 0),
 
-	foreign key (ticket_no) references boarding_pass(ticket_no) on delete cascade,
-	foreign key (ticket_no) references booking(ticket_no) on delete cascade,
-	primary key (ticket_no)
+	FOREIGN KEY (ticket_no) references boarding_pass(ticket_no) ON DELETE CASCADE,
+	FOREIGN KEY (ticket_no) references booking(ticket_no) ON DELETE CASCADE,
+	FOREIGN KEY (ticket_no)
 );
 
-create table if not exists flight
+CREATE TABLE IF NOT EXISTS flight
 (
-	flight_id serial,
-	arrival_airport varchar(100), -- May need a trigger
-	departure_airport varchar(100), -- May need a trigger
-	departure_date date, -- May need a trigger
-	airplane_model varchar(40) not null,
-	distance numeric(4,0) not null,
-	scheduled_departure_time timestamp not null,
-	scheduled_arrival_time timestamp not null,
-	scheduled_duration time not null,
-	actual_departure_time timestamp not null,
-	actual_arrival_time timestamp not null,
-	flight_status varchar(9) not null,
-	aircraft_code varchar(3) not null unique,
-	airport_code varchar(3) not null unique,
+	flight_id SERIAL,
+	arrival_airport VARCHAR(100), -- May need a trigger
+	departure_airport VARCHAR(100), -- May need a trigger
+	departure_date DATE, -- May need a trigger
+	airplane_model VARCHAR(40) NOT NULL,
+	distance NUMERIC(4,0) NOT NULL,
+	scheduled_departure_time TIMESTAMPTZ NOT NULL,
+	scheduled_arrival_time TIMESTAMPTZ NOT NULL,
+	scheduled_duration TIME NOT NULL,
+	actual_departure_time TIMESTAMPTZ,
+	actual_arrival_time TIMESTAMPTZ,
+	flight_status VARCHAR(9) NOT NULL,
+	aircraft_code VARCHAR(3) NOT NULL UNIQUE,
+	airport_code VARCHAR(3) NOT NULL UNIQUE,
 
-	check (arrival_airport != departure_airport), -- May need a trigger
-	check (scheduled_arrival_time > scheduled_departure_time), -- May need a trigger
-	check (flight_status in ('Scheduled', 'OnTime', 'Delayed', 'Departed', 'Arrived', 'Cancelled')),
+	CHECK (arrival_airport != departure_airport), -- May need a trigger
+	CHECK , -- May need a trigger
+	CHECK ((actual_arrival_time IS NULL) OR ((actual_departure_time IS NOT NULL AND  actual_arrival_time IS NOT NULL) AND (scheduled_arrival_time > scheduled_departure_time))),
+	CHECK (flight_status IN ('Scheduled', 'OnTime', 'Delayed', 'Departed', 'Arrived', 'Cancelled')),
 
-	foreign key (flight_id) references ticket(flight_id) on delete cascade,
-	primary key (flight_id)
+	FOREIGN KEY (flight_id) REFERENCES ticket(flight_id) ON DELETE CASCADE,
+	PRIMARY KEY (flight_id)
 );
 
-create table if not exists aircraft
+CREATE TABLE IF NOT EXISTS aircraft
 (
-	aircraft_code varchar(3),
-	model varchar(40) not null,
-	capacity int not null check (capacity > 0),
-	aircraft_range numeric(4,0) not null, 
+	aircraft_code VARCHAR(3),
+	model VARCHAR(40) NOT NULL,
+	capacity INT NOT NULL,
+	aircraft_range NUMERIC(4,0) NOT NULL, 
 
-	check (aircraft_code ~* '^\d{3}$'), -- It has to be a 3-digit number
-	check (aircraft_range > 0),
+	CHECK (aircraft_code ~* '^\d{3}$'), -- It has to be a 3-digit number
+	CHECK (capacity > 0),
+	CHECK (aircraft_range > aircraft0),
 
-	foreign key (aircraft_code) references flight(aircraft_code) on delete cascade,
-	foreign key (aircraft_code) references boarding_pass(aircraft_code) on delete cascade,
-	primary key (aircraft_code)
+	FOREIGN KEY (aircraft_code) REFERENCES flight(aircraft_code) ON DELETE CASCADE,
+	FOREIGN KEY (aircraft_code) REFERENCES boarding_pass(aircraft_code) ON DELETE CASCADE,
+	PRIMARY KEY (aircraft_code)
 );
 
-create table if not exists airport
+CREATE TABLE IF NOT EXISTS airport
 (
-	airport_code varchar(3),
-	airport_name varchar(40) not null,
-	city varchar(100) not null,
-	timezone timestamptz not null,
+	airport_code VARCHAR(3),
+	airport_name VARCHAR(100) NOT NULL,
+	city VARCHAR(100) NOT NULL,
+	timezone TIMESTAMPTZ NOT NULL,
 
-	check (airport_code ~* '^\w{3}$'), -- It has to be a 3 letters
+	CHECK (airport_code ~* '^\w{3}$'), -- It has to be a 3 letters
 
-	foreign key (airport_code) references flight(airport_code) on delete cascade,
-	primary key (airport_code)
+	FOREIGN KEY (airport_code) REFERENCES flight(airport_code) ON DELETE CASCADE,
+	PRIMARY KEY (airport_code)
 );
