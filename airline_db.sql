@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS flight
 	distance NUMERIC(4,0) NOT NULL,
 	scheduled_departure_time TIMESTAMPTZ NOT NULL,
 	scheduled_arrival_time TIMESTAMPTZ NOT NULL,
-	scheduled_duration TIME NOT NULL,
+	scheduled_duration numeric(4,2) NOT NULL generated always as ( extract(epoch from (scheduled_arrival_time - scheduled_departure_time))/3600 ) stored,
 	actual_departure_time TIMESTAMPTZ,
 	actual_arrival_time TIMESTAMPTZ,
 	flight_status VARCHAR(9) NOT NULL,
@@ -78,7 +78,6 @@ CREATE TABLE IF NOT EXISTS aircraft
 	CHECK (aircraft_code ~* '^\d{3}$'), -- It has to be a 3-digit number
 	CHECK (capacity > 0),
 	CHECK (aircraft_range > 0),
-	CHECK (aircraft_range > flight.distance),
 
 	FOREIGN KEY (aircraft_code) REFERENCES flight(aircraft_code) ON DELETE CASCADE,
 	FOREIGN KEY (aircraft_code) REFERENCES boarding_pass(aircraft_code) ON DELETE CASCADE,
