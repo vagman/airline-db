@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS boarding_pass
 	seat_no VARCHAR(3),
 	boarding_no SERIAL NOT NULL,
 	passenger_name VARCHAR(100) NOT NULL,
-	ticket_no VARCHAR(13) NOT NULL unique,
+	ticket_no VARCHAR(13) NOT NULL UNIQUE,
 	aircraft_code VARCHAR(3) NOT NULL UNIQUE,
 
 	FOREIGN KEY (flight_id, seat_no)
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS boarding_pass
 CREATE TABLE IF NOT EXISTS ticket
 (
 	ticket_no VARCHAR(13),
-	passenger_id VARCHAR(10) NOT NULL unique,
+	passenger_id VARCHAR(10) NOT NULL UNIQUE,
 	passenger_name VARCHAR(100) NOT NULL,
 	contact_data VARCHAR(100) NOT NULL,
 	amount DECIMAL(6,2) NOT NULL,
@@ -34,12 +34,12 @@ CREATE TABLE IF NOT EXISTS ticket
 	flight_id INT NOT NULL UNIQUE,
 
 	CHECK (ticket_no ~* '^\d{13}$'), -- It has to be a 13-digit number
-	CHECK (fare in ('Economy', 'Business', 'First class')),
+	CHECK (fare IN ('Economy', 'Business', 'First class')),
 	CHECK (book_ref ~* '([a-z]|[A-Z]|\d){6}'),
 	CHECK (amount > 0),
 
-	FOREIGN KEY (ticket_no) references boarding_pass(ticket_no) ON DELETE CASCADE,
-	FOREIGN KEY (ticket_no) references booking(ticket_no) ON DELETE CASCADE,
+	FOREIGN KEY (ticket_no) REFERENCES boarding_pass(ticket_no) ON DELETE CASCADE,
+	FOREIGN KEY (ticket_no) REFERENCES booking(ticket_no) ON DELETE CASCADE,
 	FOREIGN KEY (ticket_no)
 );
 
