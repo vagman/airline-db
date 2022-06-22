@@ -36,14 +36,12 @@ CREATE TABLE IF NOT EXISTS airport
 	PRIMARY KEY (airport_code)
 );
 
-
 CREATE TABLE IF NOT EXISTS flight
 (
 	flight_id SERIAL,
 	arrival_airport VARCHAR(100), -- May need a trigger
 	departure_airport VARCHAR(100), -- May need a trigger
 	departure_date DATE, -- May need a trigger
-	distance NUMERIC(4,0) NOT NULL,
 	scheduled_departure_time TIMESTAMPTZ NOT NULL,
 	scheduled_arrival_time TIMESTAMPTZ NOT NULL,
 	scheduled_duration numeric(4,2), -- NOT NULL generated always as ( extract(epoch from (scheduled_arrival_time - scheduled_departure_time))/3600 ) stored,
@@ -51,14 +49,16 @@ CREATE TABLE IF NOT EXISTS flight
 	actual_arrival_time TIMESTAMPTZ,
 	flight_status VARCHAR(9) NOT NULL,
 	aircraft_code VARCHAR(3) NOT NULL UNIQUE,
+	flight_range NUMERIC(4,0) NOT NULL, 
 
+	CHECK (flight_range > aircraft.aircraft_range),
 	CHECK (arrival_airport != departure_airport), -- May need a trigger
 	CHECK ((actual_arrival_time IS NULL) OR ((actual_departure_time IS NOT NULL AND  actual_arrival_time IS NOT NULL) AND (scheduled_arrival_time > scheduled_departure_time))),
 	CHECK (flight_status IN ('Scheduled', 'OnTime', 'Delayed', 'Departed', 'Arrived', 'Cancelled')),
 
 	
 	FOREIGN KEY(aircraft_code) REFERENCES aircraft(aircraft_code) ON DELETE CASCADE,
-	FOREIGN KEY(arrival_airport) REFERENCES airport(airport_code) ON DELETE CASCADE, -- changes for discussion
+	FOREIGN KEY(arrival_airport) REFERENCES airport(airport_code) ON DELETE CASCADE,
 	FOREIGN KEY(departure_airport) REFERENCES airport(airport_code) ON DELETE CASCADE,
 	PRIMARY KEY (flight_id)
 );
@@ -94,21 +94,15 @@ CREATE TABLE IF NOT EXISTS boarding_pass
 	PRIMARY KEY (flight_id, seat_no)
 );
 
-
-
-CREATE TABLE IF NOT EXISTS passenger -- Look the description about ticket(passenger_id) table at POSTGRESPRO DOCS
+CREATE TABLE IF NOT EXISTS passenger
 (
 	passenger_id VARCHAR(10),
 	passenger_name VARCHAR(100),
 	contact_data VARCHAR(100),
-
 	
 	FOREIGN KEY (passenger_id) REFERENCES ticket(passenger_id) ON DELETE CASCADE,
 	PRIMARY KEY (passenger_id) --check if primary key can be {passenger_id, passenger_name, contact_data}
 );
-
-
-
 
 -- Sample data
 COPY booking FROM '/booking.csv' DELIMITER ',' CSV HEADER;
