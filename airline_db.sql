@@ -1,10 +1,10 @@
 CREATE TABLE IF NOT EXISTS booking
 (
 	book_ref VARCHAR(6),
-	book_date TIMESTAMP NOT NULL,
-	total_cost DECIMAL(6,2) NOT NULL,
+	book_date DATE NOT NULL,
+	total_cost MONEY NOT NULL,
 
-	CHECK (book_ref ~* '([a-z]|[A-Z]|\d){6}'), -- A combination of 6 digits or numbers
+	CHECK (book_ref ~* '([a-z]|[A-Z]|\d){6}'),
 	CHECK (total_cost > 0),
 
 	PRIMARY KEY (book_ref)
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS aircraft
 	capacity INT NOT NULL,
 	aircraft_range NUMERIC(4,0) NOT NULL, 
 
-	CHECK (aircraft_code ~* '^\d{3}$'), -- It has to be a 3-digit number
+	CHECK (aircraft_code ~* '^\d{3}$'),
 	CHECK (capacity > 0),
 	CHECK (aircraft_range > 0),
 
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS airport
 	city VARCHAR(100) NOT NULL,
 	timezone VARCHAR(40) NOT NULL,
 
-	CHECK (airport_code ~* '^\w{3}$'), -- It has to be a 3 letters
+	CHECK (airport_code ~* '^\w{3}$'),
 
 	PRIMARY KEY (airport_code)
 );
@@ -39,9 +39,11 @@ CREATE TABLE IF NOT EXISTS airport
 CREATE TABLE IF NOT EXISTS passenger
 (
 	passenger_id VARCHAR(10),
-	passenger_name VARCHAR(100),
-	contact_data NUMERIC(10),
+	passenger_name VARCHAR(100) NOT NULL,
+	contact_data NUMERIC(10) NOT NULL,
 	
+	CHECK(VALUE ~* '^[0-9]{10}$'),
+
 	PRIMARY KEY (passenger_id)
 );
 
@@ -51,19 +53,19 @@ CREATE TABLE IF NOT EXISTS flight
 	arrival_airport VARCHAR(3),
 	departure_airport VARCHAR(3),
 	departure_date DATE,
-	scheduled_departure_time TIMESTAMPTZ NOT NULL,
-	scheduled_arrival_time TIMESTAMPTZ NOT NULL,
+	scheduled_departure_time TIME WITH TIME ZONE NOT NULL,
+	scheduled_arrival_time TIME WITH TIME ZONE NOT NULL,
 	scheduled_duration numeric(4,2),
-	actual_departure_time TIMESTAMPTZ,
-	actual_arrival_time TIMESTAMPTZ,
-	flight_status VARCHAR(9) NOT NULL DEFAULT 'Scheduled',
+	actual_departure_time TIME WITH TIME ZONE,
+	actual_arrival_time TIME WITH TIME ZONE,
+	flight_status VARCHAR(9) NOT NULL,
 	aircraft_code VARCHAR(3) NOT NULL UNIQUE,
 	flight_range NUMERIC(4,0) NOT NULL, 
 
-	-- CHECK (flight_range > aircraft.aircraft_range),
+	-- CHECK (flight.flight_range > aircraft.aircraft_range),
 	CHECK (arrival_airport != departure_airport),
-	CHECK (scheduled_duration > 0),
-	-- CHECK ((actual_arrival_time IS NULL) OR ((actual_departure_time IS NOT NULL AND  actual_arrival_time IS NOT NULL) AND (scheduled_arrival_time > scheduled_departure_time))),
+	CHECK (scheduled_duration > 0 AND flight_range > 0),
+	CHECK (scheduled_arrival_time > scheduled_departure_time),
 	CHECK (flight_status IN ('Scheduled', 'OnTime', 'Delayed', 'Departed', 'Arrived', 'Cancelled')),
 	
 	FOREIGN KEY(aircraft_code) REFERENCES aircraft(aircraft_code) ON DELETE CASCADE,
@@ -75,13 +77,13 @@ CREATE TABLE IF NOT EXISTS flight
 CREATE TABLE IF NOT EXISTS ticket
 (
 	ticket_no VARCHAR(13),
-	amount DECIMAL(6,2) NOT NULL,
+	amount MONEY NOT NULL,
 	fare VARCHAR(11) NOT NULL,
 	book_ref VARCHAR(6) NOT NULL UNIQUE,
 	flight_id INT NOT NULL UNIQUE,
 	passenger_id VARCHAR(10) NOT NULL UNIQUE,
 
-	CHECK (ticket_no ~* '^\d{13}$'), -- It has to be a 13-digit number
+	CHECK (ticket_no ~* '^\d{13}$'),
 	CHECK (fare IN ('Economy', 'Business', 'First class')),
 	CHECK (book_ref ~* '([a-z]|[A-Z]|\d){6}'),
 	CHECK (amount > 0),
