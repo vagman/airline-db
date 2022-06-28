@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS booking
+CREATE TABLE booking
 (
 	book_ref VARCHAR(6),
 	book_date DATE NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS booking
 	PRIMARY KEY (book_ref)
 );
 
-CREATE TABLE IF NOT EXISTS aircraft
+CREATE TABLE aircraft
 (
 	aircraft_code VARCHAR(3),
 	aircraft_model VARCHAR(40) NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS aircraft
 	PRIMARY KEY (aircraft_code)
 );
 
-CREATE TABLE IF NOT EXISTS airport
+CREATE TABLE airport
 (
 	airport_code VARCHAR(3),
 	airport_name VARCHAR(100) NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS airport
 	PRIMARY KEY (airport_code)
 );
 
-CREATE TABLE IF NOT EXISTS passenger
+CREATE TABLE passenger
 (
 	passenger_id VARCHAR(10),
 	passenger_name VARCHAR(100) NOT NULL,
@@ -47,12 +47,13 @@ CREATE TABLE IF NOT EXISTS passenger
 	PRIMARY KEY (passenger_id)
 );
 
-CREATE TABLE IF NOT EXISTS flight
+CREATE TABLE flight
 (
 	flight_id SERIAL,
 	arrival_airport VARCHAR(3),
 	departure_airport VARCHAR(3),
-	departure_date DATE,
+	departure_date DATE,  -- arrival_date - departure_date < 1 day
+	arrival_date DATE,
 	scheduled_departure_time TIME WITH TIME ZONE NOT NULL,
 	scheduled_arrival_time TIME WITH TIME ZONE NOT NULL,
 	scheduled_duration numeric(4,2),
@@ -63,10 +64,10 @@ CREATE TABLE IF NOT EXISTS flight
 	flight_range NUMERIC(4,0) NOT NULL, 
 
 	-- CHECK (flight.flight_range > aircraft.aircraft_range),
-	CHECK (arrival_airport != departure_airport),
 	CHECK (scheduled_duration > 0 AND flight_range > 0),
 	CHECK (scheduled_arrival_time > scheduled_departure_time),
 	CHECK (flight_status IN ('Scheduled', 'OnTime', 'Delayed', 'Departed', 'Arrived', 'Cancelled')),
+	CHECK (IF flight_status == 'Arrived' THEN actual_arrival_time IS NOT NULL),
 	
 	FOREIGN KEY(aircraft_code) REFERENCES aircraft(aircraft_code) ON DELETE CASCADE,
 	FOREIGN KEY(arrival_airport) REFERENCES airport(airport_code) ON DELETE CASCADE,
@@ -74,7 +75,7 @@ CREATE TABLE IF NOT EXISTS flight
 	PRIMARY KEY (flight_id)
 );
 
-CREATE TABLE IF NOT EXISTS ticket
+CREATE TABLE ticket
 (
 	ticket_no VARCHAR(13),
 	amount MONEY NOT NULL,
@@ -94,7 +95,7 @@ CREATE TABLE IF NOT EXISTS ticket
 	PRIMARY KEY (ticket_no)
 );
 
-CREATE TABLE IF NOT EXISTS boarding_pass
+CREATE TABLE boarding_pass
 (
 	flight_id SERIAL,
 	seat_no VARCHAR(3),

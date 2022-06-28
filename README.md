@@ -1,1 +1,2 @@
-# database-class
+# Airline Database
+In this course assignment (Databases, 4th semester) we were asked to implement a relational database of an airline where there will be stores the various information needed for it in order to function properly such as: reservations, tickets, boarding passes, airports, flights etc.
