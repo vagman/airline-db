@@ -10,19 +10,33 @@ CREATE TABLE booking
 	PRIMARY KEY (book_ref)
 );
 
-CREATE TABLE aircraft
+
+CREATE TABLE model
 (
-	aircraft_code VARCHAR(3),
+ 
 	aircraft_model VARCHAR(40) NOT NULL,
 	capacity INT NOT NULL,
 	aircraft_range NUMERIC(4,0) NOT NULL, 
 
-	CHECK (aircraft_code ~* '^\d{3}$'),
 	CHECK (capacity > 0),
 	CHECK (aircraft_range > 0),
 
+	PRIMARY KEY (aircraft_model)
+
+)
+
+CREATE TABLE aircraft
+(
+	aircraft_code VARCHAR(3), --giati to eixame NOT_NULL ?
+	aircraft_model VARCHAR(40) NOT NULL,
+	CHECK (aircraft_code ~* '^\d{3}$'),
+
+
 	PRIMARY KEY (aircraft_code)
+	FOREIGN KEY (aircraft_model) REFERENCES model(aircraft_model)
 );
+
+
 
 CREATE TABLE airport
 (
