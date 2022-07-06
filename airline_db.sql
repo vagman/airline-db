@@ -27,12 +27,11 @@ CREATE TABLE model
 
 CREATE TABLE aircraft
 (
-	aircraft_code VARCHAR(3), --giati to eixame NOT_NULL ?
+	aircraft_code VARCHAR(3), 
 	aircraft_model VARCHAR(40) NOT NULL,
 	CHECK (aircraft_code ~* '^\d{3}$'),
 
-
-	PRIMARY KEY (aircraft_code)
+	PRIMARY KEY (aircraft_code),
 	FOREIGN KEY (aircraft_model) REFERENCES model(aircraft_model)
 );
 
@@ -46,7 +45,6 @@ CREATE TABLE airport
 	timezone VARCHAR(40) NOT NULL,
 
 	CHECK (airport_code ~* '^\w{3}$'),
-
 	PRIMARY KEY (airport_code)
 );
 
@@ -55,9 +53,7 @@ CREATE TABLE passenger
 	passenger_id VARCHAR(10),
 	passenger_name VARCHAR(100) NOT NULL,
 	contact_data NUMERIC(10) NOT NULL,
-	
 	CHECK(VALUE ~* '^[0-9]{10}$'),
-
 	PRIMARY KEY (passenger_id)
 );
 
@@ -88,6 +84,35 @@ CREATE TABLE flight
 	FOREIGN KEY(departure_airport) REFERENCES airport(airport_code) ON DELETE CASCADE,
 	PRIMARY KEY (flight_id)
 );
+
+CREATE TABLE actual_status
+(
+	actual_departure_time TIME WITH TIME ZONE,
+	actual_arrival_time TIME WITH TIME ZONE,
+	flight_status VARCHAR(9) NOT NULL,
+	flight_id SERIAL,
+
+	CHECK (flight_status IN ('Scheduled', 'OnTime', 'Delayed', 'Departed', 'Arrived', 'Cancelled')),
+	CHECK (IF flight_status == 'Arrived' THEN actual_arrival_time IS NOT NULL),
+
+	FOREIGN KEY flight_id REFERENCES flight(flight_id),
+	PRIMARY KEY (flight_status)
+	
+);
+CREATE TABLE duration 
+(
+	scheduled_departure_time TIME WITH TIME ZONE,
+	scheduled_arrival_time TIME WITH TIME ZONE,
+	scheduled_duration numeric(4,2),
+	flight_id SERIAL,
+
+	CHECK (scheduled_duration > 0 AND flight.flight_range > 0),
+	CHECK (scheduled_arrival_time > scheduled_departure_time),
+
+	FOREIGN KEY flight_id REFERENCES flight(flight),
+	PRIMARY KEY (scheduled_departure_time, scheduled_arrival_time)
+
+)
 
 CREATE TABLE ticket
 (
