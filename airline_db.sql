@@ -1,3 +1,7 @@
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+
+
 CREATE TABLE booking
 (
 	book_ref VARCHAR(6),
@@ -150,3 +154,7 @@ SELECT * FROM ticket;
 
 COPY boarding_pass FROM 'C:\database-class\data\boarding_pass.csv' DELIMITER ',' CSV HEADER;
 SELECT * FROM boarding_pass;
+
+
+
+
