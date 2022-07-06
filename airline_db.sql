@@ -9,7 +9,7 @@ CREATE TABLE booking
 	total_cost MONEY NOT NULL,
 
 	CHECK (book_ref ~* '([a-z]|[A-Z]|\d){6}'),
-	CHECK (total_cost > 0),
+	--CHECK (total_cost > 0),
 
 	PRIMARY KEY (book_ref)
 );
@@ -24,7 +24,7 @@ CREATE TABLE model
 	CHECK (aircraft_range > 0),
 
 	PRIMARY KEY (aircraft_model)
-)
+);
 
 CREATE TABLE aircraft
 (
@@ -52,7 +52,7 @@ CREATE TABLE passenger
 	passenger_id VARCHAR(10),
 	passenger_name VARCHAR(100) NOT NULL,
 	contact_data NUMERIC(10) NOT NULL,
-	CHECK(VALUE ~* '^[0-9]{10}$'),
+	--CHECK(VALUE ~* '^[0-9]{10}$'),
 	PRIMARY KEY (passenger_id)
 );
 
@@ -66,6 +66,7 @@ CREATE TABLE flight
 	flight_range NUMERIC(4,0) NOT NULL, 
 	
 	CHECK (arrival_airport != departure_airport),
+	CHECK (flight_range > 0),
 
 	FOREIGN KEY(aircraft_code) REFERENCES aircraft(aircraft_code) ON DELETE CASCADE,
 	FOREIGN KEY(arrival_airport) REFERENCES airport(airport_code) ON DELETE CASCADE,
@@ -81,9 +82,9 @@ CREATE TABLE actual_status
 	flight_id INT UNIQUE NOT NULL,
 
 	CHECK (flight_status IN ('Scheduled', 'OnTime', 'Delayed', 'Departed', 'Arrived', 'Cancelled')),
-	CHECK (IF flight_status == 'Arrived' THEN actual_arrival_time IS NOT NULL),
+	--CHECK (IF flight_status == 'Arrived' THEN actual_arrival_time IS NOT NULL),
 
-	FOREIGN KEY flight_id REFERENCES flight(flight_id),
+	FOREIGN KEY (flight_id) REFERENCES flight(flight_id),
 	PRIMARY KEY (flight_status)
 );
 
@@ -94,10 +95,10 @@ CREATE TABLE duration
 	scheduled_duration numeric(4,2) NOT NULL,
 	flight_id INT UNIQUE NOT NULL,
 
-	CHECK (scheduled_duration > 0 AND flight.flight_range > 0),
+	CHECK (scheduled_duration > 0),
 	CHECK (scheduled_arrival_time > scheduled_departure_time),
 
-	FOREIGN KEY flight_id REFERENCES flight(flight_id),
+	FOREIGN KEY (flight_id) REFERENCES flight(flight_id),
 	PRIMARY KEY (scheduled_departure_time, scheduled_arrival_time)
 );
 
@@ -113,7 +114,7 @@ CREATE TABLE ticket
 	CHECK (ticket_no ~* '^\d{13}$'),
 	CHECK (fare IN ('Economy', 'Business', 'First class')),
 	CHECK (book_ref ~* '([a-z]|[A-Z]|\d){6}'),
-	CHECK (amount > 0),
+	--CHECK (amount > 0),
 
 	FOREIGN KEY (flight_id) REFERENCES flight(flight_id) ON DELETE CASCADE,
 	FOREIGN KEY (book_ref) REFERENCES booking(book_ref) ON DELETE CASCADE,
