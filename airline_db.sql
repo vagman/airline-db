@@ -10,10 +10,8 @@ CREATE TABLE booking
 	PRIMARY KEY (book_ref)
 );
 
-
 CREATE TABLE model
 (
- 
 	aircraft_model VARCHAR(40) NOT NULL,
 	capacity INT NOT NULL,
 	aircraft_range NUMERIC(4,0) NOT NULL, 
@@ -22,7 +20,6 @@ CREATE TABLE model
 	CHECK (aircraft_range > 0),
 
 	PRIMARY KEY (aircraft_model)
-
 )
 
 CREATE TABLE aircraft
@@ -34,8 +31,6 @@ CREATE TABLE aircraft
 	PRIMARY KEY (aircraft_code),
 	FOREIGN KEY (aircraft_model) REFERENCES model(aircraft_model)
 );
-
-
 
 CREATE TABLE airport
 (
@@ -60,25 +55,14 @@ CREATE TABLE passenger
 CREATE TABLE flight
 (
 	flight_id SERIAL,
-	arrival_airport VARCHAR(3),
-	departure_airport VARCHAR(3),
-	departure_date DATE,  -- arrival_date - departure_date < 1 day
-	arrival_date DATE,
-	scheduled_departure_time TIME WITH TIME ZONE NOT NULL,
-	scheduled_arrival_time TIME WITH TIME ZONE NOT NULL,
-	scheduled_duration numeric(4,2),
-	actual_departure_time TIME WITH TIME ZONE,
-	actual_arrival_time TIME WITH TIME ZONE,
-	flight_status VARCHAR(9) NOT NULL,
+	arrival_airport VARCHAR(3) NOT NULL,
+	departure_airport VARCHAR(3) NOT NULL,
+	departure_date DATE NOT NULL,
 	aircraft_code VARCHAR(3) NOT NULL UNIQUE,
 	flight_range NUMERIC(4,0) NOT NULL, 
-
-	-- CHECK (flight.flight_range > aircraft.aircraft_range),
-	CHECK (scheduled_duration > 0 AND flight_range > 0),
-	CHECK (scheduled_arrival_time > scheduled_departure_time),
-	CHECK (flight_status IN ('Scheduled', 'OnTime', 'Delayed', 'Departed', 'Arrived', 'Cancelled')),
-	CHECK (IF flight_status == 'Arrived' THEN actual_arrival_time IS NOT NULL),
 	
+	CHECK (arrival_airport != departure_airport),
+
 	FOREIGN KEY(aircraft_code) REFERENCES aircraft(aircraft_code) ON DELETE CASCADE,
 	FOREIGN KEY(arrival_airport) REFERENCES airport(airport_code) ON DELETE CASCADE,
 	FOREIGN KEY(departure_airport) REFERENCES airport(airport_code) ON DELETE CASCADE,
@@ -90,29 +74,28 @@ CREATE TABLE actual_status
 	actual_departure_time TIME WITH TIME ZONE,
 	actual_arrival_time TIME WITH TIME ZONE,
 	flight_status VARCHAR(9) NOT NULL,
-	flight_id SERIAL,
+	flight_id INT UNIQUE NOT NULL,
 
 	CHECK (flight_status IN ('Scheduled', 'OnTime', 'Delayed', 'Departed', 'Arrived', 'Cancelled')),
 	CHECK (IF flight_status == 'Arrived' THEN actual_arrival_time IS NOT NULL),
 
 	FOREIGN KEY flight_id REFERENCES flight(flight_id),
 	PRIMARY KEY (flight_status)
-	
 );
+
 CREATE TABLE duration 
 (
 	scheduled_departure_time TIME WITH TIME ZONE,
 	scheduled_arrival_time TIME WITH TIME ZONE,
-	scheduled_duration numeric(4,2),
-	flight_id SERIAL,
+	scheduled_duration numeric(4,2) NOT NULL,
+	flight_id INT UNIQUE NOT NULL,
 
 	CHECK (scheduled_duration > 0 AND flight.flight_range > 0),
 	CHECK (scheduled_arrival_time > scheduled_departure_time),
 
-	FOREIGN KEY flight_id REFERENCES flight(flight),
+	FOREIGN KEY flight_id REFERENCES flight(flight_id),
 	PRIMARY KEY (scheduled_departure_time, scheduled_arrival_time)
-
-)
+);
 
 CREATE TABLE ticket
 (
