@@ -1,7 +1,6 @@
 DROP SCHEMA public CASCADE;
 CREATE SCHEMA public;
 
-
 CREATE TABLE booking
 (
 	book_ref VARCHAR(6),
@@ -9,7 +8,7 @@ CREATE TABLE booking
 	total_cost MONEY NOT NULL,
 
 	CHECK (book_ref ~* '([a-z]|[A-Z]|\d){6}'),
-	--CHECK (total_cost > 0),
+	CHECK (total_cost::numeric::int > 0),
 
 	PRIMARY KEY (book_ref)
 );
@@ -30,6 +29,7 @@ CREATE TABLE aircraft
 (
 	aircraft_code VARCHAR(3), 
 	aircraft_model VARCHAR(40) NOT NULL,
+
 	CHECK (aircraft_code ~* '^\d{3}$'),
 
 	PRIMARY KEY (aircraft_code),
@@ -44,6 +44,7 @@ CREATE TABLE airport
 	timezone VARCHAR(40) NOT NULL,
 
 	CHECK (airport_code ~* '^\w{3}$'),
+
 	PRIMARY KEY (airport_code)
 );
 
@@ -51,8 +52,10 @@ CREATE TABLE passenger
 (
 	passenger_id VARCHAR(10),
 	passenger_name VARCHAR(100) NOT NULL,
-	contact_data NUMERIC(10) NOT NULL,
-	--CHECK(VALUE ~* '^[0-9]{10}$'),
+	contact_data NUMERIC(10,0) NOT NULL,
+	
+	CHECK(contact_data::text ~* '^[0-9]{10}$'),
+
 	PRIMARY KEY (passenger_id)
 );
 
@@ -82,7 +85,6 @@ CREATE TABLE actual_status
 	flight_id INT UNIQUE NOT NULL,
 
 	CHECK (flight_status IN ('Scheduled', 'OnTime', 'Delayed', 'Departed', 'Arrived', 'Cancelled')),
-	--CHECK (IF flight_status == 'Arrived' THEN actual_arrival_time IS NOT NULL),
 
 	FOREIGN KEY (flight_id) REFERENCES flight(flight_id),
 	PRIMARY KEY (flight_status)
@@ -114,7 +116,7 @@ CREATE TABLE ticket
 	CHECK (ticket_no ~* '^\d{13}$'),
 	CHECK (fare IN ('Economy', 'Business', 'First class')),
 	CHECK (book_ref ~* '([a-z]|[A-Z]|\d){6}'),
-	--CHECK (amount > 0),
+	CHECK (amount::numeric::int > 0),
 
 	FOREIGN KEY (flight_id) REFERENCES flight(flight_id) ON DELETE CASCADE,
 	FOREIGN KEY (book_ref) REFERENCES booking(book_ref) ON DELETE CASCADE,
