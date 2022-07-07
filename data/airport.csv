@@ -1,31 +1,9 @@
 airport_code,airport_name,city,timezone
-BBJ,Ioannis Kapodistrias,Memphis,America/Chicago
-RGA,Alexander the Great,Krajan Caluk,Asia/Jakarta
-BPX,Odysseas Elitis,Neuville,America/Montreal
-QHP,Alexander the Great,Bogolyubovo,Europe/Moscow
-FBA,Odysseas Elitis,Troitskoye,Europe/Moscow
-TKT,Captain Vassilis Constantakopoulos,Bécancour,America/Montreal
-TPP,Alexander the Great,Grande Rivière Noire,Indian/Mauritius
-PVL,Ioannis Kapodistrias,Nanyang,Asia/Shanghai
-WXN,Eleftherios Venizelos,La Lima,America/Tegucigalpa
-ZPJ,Alexander the Great,Petite Anse,America/Port-au-Prince
-RUF,Eleftherios Venizelos,Campo,Europe/Lisbon
-HNU,Alexander the Great,La Loma,America/Mexico_City
-HRL,Ioannis Kapodistrias,Cícero Dantas,America/Bahia
-FWE,Diagoras,Sagang,Asia/Manila
-OEQ,Anna Pollatou,Dongxiang,Asia/Chongqing
-IDA,Diagoras,Kerikeri,Pacific/Auckland
-JYV,Eleftherios Venizelos,Xujiahe,Asia/Chongqing
-YEF,Eleftherios Venizelos,Banjar Danginsema,Asia/Makassar
-TKU,Nikos Kazantzakis,Na Klang,Asia/Bangkok
-CRM,Ioannis Kapodistrias,Nihommatsu,Asia/Tokyo
-JCF,Alexander the Great,Baolong,Asia/Chongqing
-IYK,Nikos Kazantzakis,Puan,America/Argentina/Buenos_Aires
-KZP,Nikos Kazantzakis,Usol’ye,Asia/Yekaterinburg
-SXK,Eleftherios Venizelos,Takokak,Asia/Jakarta
-QJZ,Anna Pollatou,Don Tan,Asia/Vientiane
-YBD,Eleftherios Venizelos,Jiadingzhen,Asia/Shanghai
-ITO,Anna Pollatou,Vilhelmina,Europe/Stockholm
-RKZ,Anna Pollatou,Golbey,Europe/Paris
-VFA,Nikos Kazantzakis,Pangkalanbuun,Asia/Pontianak
-FHV,Anna Pollatou,Wuyang,Asia/Chongqing
+WBJ,Captain Vassilis Constantakopoulos,Hatton,Europe/London
+MRP,Diagoras,Lyon,Europe/Paris
+LUI,Nikos Kazantzakis,Nanyang,Asia/Chongqing
+ROB,Odysseas Elitis,Jiaomingsi,Asia/Shanghai
+LHW,Anna Pollatou,Bacelo,Europe/Lisbon
+BLB,Alexander the Great,Vrbovec,Europe/Prague
+IJJ,Ioannis Kapodistrias,Rudna,Europe/Warsaw
+WBE,Eleftherios Venizelos,Santi Suk,Asia/Bangkok

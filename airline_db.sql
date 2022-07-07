@@ -52,8 +52,8 @@ CREATE TABLE passenger
 (
 	passenger_id VARCHAR(10),
 	passenger_name VARCHAR(100) NOT NULL,
-	contact_data NUMERIC(10,0) NOT NULL,
-	
+	contact_data VARCHAR(15) NOT NULL,
+
 	CHECK(contact_data::text ~* '^[0-9]{10}$'),
 
 	PRIMARY KEY (passenger_id)
@@ -79,8 +79,8 @@ CREATE TABLE flight
 
 CREATE TABLE actual_status
 (
-	actual_departure_time TIME WITH TIME ZONE,
-	actual_arrival_time TIME WITH TIME ZONE,
+	actual_departure_time TIMESTAMPTZ,
+	actual_arrival_time TIMESTAMPTZ,
 	flight_status VARCHAR(9) NOT NULL,
 	flight_id INT UNIQUE NOT NULL,
 
@@ -92,12 +92,11 @@ CREATE TABLE actual_status
 
 CREATE TABLE duration 
 (
-	scheduled_departure_time TIME WITH TIME ZONE,
-	scheduled_arrival_time TIME WITH TIME ZONE,
-	scheduled_duration numeric(4,2) NOT NULL,
+	scheduled_departure_time TIMESTAMPTZ,
+	scheduled_arrival_time TIMESTAMPTZ,
+	scheduled_duration INTERVAL NOT NULL GENERATED ALWAYS AS (scheduled_arrival_time - scheduled_departure_time) STORED,
 	flight_id INT UNIQUE NOT NULL,
 
-	CHECK (scheduled_duration > 0),
 	CHECK (scheduled_arrival_time > scheduled_departure_time),
 
 	FOREIGN KEY (flight_id) REFERENCES flight(flight_id),
@@ -128,7 +127,7 @@ CREATE TABLE boarding_pass
 (
 	flight_id SERIAL,
 	seat_no VARCHAR(3),
-	boarding_no SERIAL NOT NULL, -- Has top be <= aircraft.capacity
+	boarding_no SERIAL NOT NULL,
 	ticket_no VARCHAR(13) NOT NULL UNIQUE,
 
 	FOREIGN KEY (ticket_no) REFERENCES ticket(ticket_no) ON DELETE CASCADE,
@@ -152,12 +151,14 @@ SELECT * FROM passenger;
 COPY flight FROM 'C:\database-class\data\flight.csv' DELIMITER ',' CSV HEADER;
 SELECT * FROM flight;
 
+COPY actual_status FROM 'C:\database-class\data\actual_status.csv' DELIMITER ',' CSV HEADER;
+SELECT * FROM actual_status;
+
+COPY duration FROM 'C:\database-class\data\duration.csv' DELIMITER ',' CSV HEADER;
+SELECT * FROM duration;
+
 COPY ticket FROM 'C:\database-class\data\ticket.csv' DELIMITER ',' CSV HEADER;
 SELECT * FROM ticket;
 
 COPY boarding_pass FROM 'C:\database-class\data\boarding_pass.csv' DELIMITER ',' CSV HEADER;
 SELECT * FROM boarding_pass;
-
-
-
-
