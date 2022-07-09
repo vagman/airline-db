@@ -64,8 +64,8 @@ CREATE TABLE flight
 	flight_id SERIAL,
 	arrival_airport VARCHAR(3) NOT NULL,
 	departure_airport VARCHAR(3) NOT NULL,
-	departure_date DATE NOT NULL, --scheduled_departure_date
-	aircraft_code VARCHAR(3) NOT NULL, --den prepei na einai unique, giati an einai unique to aircraft_code tote mia ptisi me date 27/6/2022 den mporei na exei to idio aircraft_code me mia ptisi poy tha petaksei stis 15/7/2022 (enw diladi exei ftasei i prwti ptisi kai to aeroplano tha petaxei meta apo enan mina)
+	departure_date DATE NOT NULL,
+	aircraft_code VARCHAR(3) NOT NULL,
 	flight_range NUMERIC(4,0) NOT NULL, 
 	
 	CHECK (arrival_airport != departure_airport),
@@ -97,7 +97,7 @@ CREATE TABLE duration
 	scheduled_departure_time TIMESTAMPTZ,
 	scheduled_arrival_time TIMESTAMPTZ,
 	scheduled_duration VARCHAR(20),
-	
+
 	CHECK (scheduled_arrival_time > scheduled_departure_time),
 
 	FOREIGN KEY (flight_id) REFERENCES flight(flight_id),
