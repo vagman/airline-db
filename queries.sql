@@ -32,11 +32,18 @@ SELECT F.flight_id, (SELECT (EXTRACT(epoch FROM(SELECT (A.actual_arrival_time - 
 FROM flight AS F
 JOIN actual_status AS A ON A.flight_id = F.flight_id
 WHERE EXTRACT(YEAR FROM F.departure_date) = 2022
-	  AND (SELECT (EXTRACT(epoch FROM(SELECT (A.actual_arrival_time - A.actual_departure_time)))/3600)::float) IS NOT NULL
+	AND (SELECT (EXTRACT(epoch FROM(SELECT (A.actual_arrival_time - A.actual_departure_time)))/3600)::float) IS NOT NULL
 ORDER BY delay_in_hours DESC
 LIMIT 5;
 
 -- e.
+SELECT A.city, COUNT(*) AS appears
+FROM flight AS F
+JOIN airport AS A ON A.airport_code = F.arrival_airport
+WHERE EXTRACT(YEAR FROM F.departure_date) = 2022
+GROUP BY A.city
+ORDER BY appears DESC
+LIMIT 5;
 
 -- f.
 SELECT flight_id
