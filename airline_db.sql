@@ -147,8 +147,6 @@ COPY duration FROM 'C:\database-class\data\duration.csv' DELIMITER ',' CSV HEADE
 COPY ticket FROM 'C:\database-class\data\ticket.csv' DELIMITER ',' CSV HEADER; --9th --470 registers
 COPY boarding_pass FROM 'C:\database-class\data\boarding_pass.csv' DELIMITER ',' CSV HEADER; --10th --470 registers
 
-
-
 SELECT * FROM booking;
 SELECT * FROM model;
 SELECT * FROM aircraft;
@@ -159,10 +157,3 @@ SELECT * FROM actual_status;
 SELECT * FROM duration;
 SELECT * FROM ticket;
 SELECT * FROM boarding_pass;
-
-
-
-
-
-
-
