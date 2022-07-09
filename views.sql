@@ -1,14 +1,11 @@
 -- Flights_View: 
-CREATE VIEWS Flights_View AS
-SELECT F.flight_id, F.departure_airport, Air.airport_name as departure_airport_name, F.arrival_airport, Air.airport_name as arrival_airport_name, Air.city, D.scheduled_departure_time, A.actual_departure_time, D.scheduled_arrival_time, A.actual_arrival_time, D.scheduled_duration
+SELECT F.flight_id, F.departure_airport, DAir.airport_name as departure_airport_name, F.arrival_airport, AAir.airport_name as arrival_airport_name, DAir.city, D.scheduled_departure_time, A.actual_departure_time, D.scheduled_arrival_time, A.actual_arrival_time, D.scheduled_duration
 FROM flight as F 
-natural join duration as D 
-natural join actual_status as A 
-natural join airport as Air
+join duration as D on D.flight_id = F.flight_id
+join actual_status as A on A.flight_id = F.flight_id
+join airport as DAir on DAir.airport_code = F.departure_airport
+join airport as AAir on AAir.airport_code = F.arrival_airport
 WHERE F.departure_date = '6/25/2022%';
--- 90% σωστο. TODO: Πρεπει να εμφανιζεται και το ΣΩΣΤΟ departure_airport_name and arrival_airport_name 
--- που αντιστοιχει στους κωδικους departure_aiport/arrival_airport
-
 
 -- Routes_View: 
 CREATE VIEWS Routes_View AS
