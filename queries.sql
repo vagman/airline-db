@@ -46,11 +46,13 @@ ORDER BY appears DESC
 LIMIT 5;
 
 -- f.
-SELECT flight_id
+SELECT T.passenger_id, P.passenger_name, 
+	   COUNT(T.passenger_id) AS passengers_total_flights, 
+	   ROUND(CAST(AVG(B.boarding_no) AS numeric), 1) AS average_boarding_que
 FROM ticket AS T 
-JOIN boarding_pass AS B ON B.flight_id = T.flight_id
-JOIN flight AS F ON f.flight_ID = t.flight_id
+JOIN boarding_pass AS B ON B.ticket_no = T.ticket_no
+JOIN flight AS F ON F.flight_ID = T.flight_id
 JOIN passenger AS P ON T.passenger_id = P.passenger_id
-WHERE 
-ORDER BY boarding_no DESC;
-
+GROUP BY T.passenger_id, P.passenger_name
+HAVING COUNT(T.passenger_id) > 1
+ORDER BY average_boarding_que ASC;
