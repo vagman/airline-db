@@ -39,3 +39,11 @@ LIMIT 5;
 -- e.
 
 -- f.
+SELECT flight_id
+FROM ticket AS T 
+JOIN boarding_pass AS B ON B.flight_id = T.flight_id
+JOIN flight AS F ON f.flight_ID = t.flight_id
+JOIN passenger AS P ON T.passenger_id = P.passenger_id
+WHERE 
+ORDER BY boarding_no DESC;
+

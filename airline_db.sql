@@ -109,9 +109,9 @@ CREATE TABLE ticket
 	ticket_no VARCHAR(13),
 	amount MONEY NOT NULL,
 	fare VARCHAR(11) NOT NULL,
-	book_ref VARCHAR(6) NOT NULL, --den mporei na einai UNIQUE giati ena book_ref mporei na anaferetai se polla eisitiria. Ara mporei na doume arketa ticket_no na exoun to idio book_ref
-	flight_id INT NOT NULL,  --den mporei na einai UNIQUE giati mporei polla tickets (ticket_no) na antistoixoun stin idia ptisi. Epomenws kai to flight_id epivaletai na epanalamvanetai ston pinaka ticket
-	passenger_id VARCHAR(10) NOT NULL UNIQUE,
+	book_ref VARCHAR(6) NOT NULL,
+	flight_id INT NOT NULL, 
+	passenger_id VARCHAR(10) NOT NULL,
 
 	--CHECK (ticket_no ~* '^\d{13}$'),
 	CHECK (fare IN ('Economy', 'Business', 'First class')),
