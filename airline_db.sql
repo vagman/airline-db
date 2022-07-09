@@ -15,7 +15,7 @@ CREATE TABLE booking
 
 CREATE TABLE model
 (
-	aircraft_model VARCHAR(40) NOT NULL,
+	aircraft_model VARCHAR(40),
 	capacity INT NOT NULL,
 	aircraft_range NUMERIC(4,0) NOT NULL, 
 
