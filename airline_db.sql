@@ -79,10 +79,10 @@ CREATE TABLE flight
 
 CREATE TABLE actual_status
 (
+	flight_id INT,
+	flight_status VARCHAR(9) NOT NULL,
 	actual_departure_time TIMESTAMPTZ,
 	actual_arrival_time TIMESTAMPTZ,
-	flight_status VARCHAR(9) NOT NULL,
-	flight_id INT,
 	--departure_date DATE, --einai to scheduled_departure_time opote kai na ginei Cancelled mia ptisi den mas peirazei. Emeis mesw tou departure_date KAI tou flight_id mporoyme na prosdiorisoume ta upoloipa
 
 	CHECK (flight_status IN ('Scheduled', 'OnTime', 'Delayed', 'Departed', 'Arrived', 'Cancelled')),
@@ -93,14 +93,11 @@ CREATE TABLE actual_status
 
 CREATE TABLE duration 
 (
+	flight_id INT UNIQUE NOT NULL,
 	scheduled_departure_time TIMESTAMPTZ,
 	scheduled_arrival_time TIMESTAMPTZ,
-	scheduled_duration VARCHAR(20), --to vazw proswrina varchar giati mesa stis eggrafes exoume grapsei kai to 'hours'  (px 12.4 hours)
+	scheduled_duration VARCHAR(20),
 	
-	--το ειχαμε βαλει ως interval ομως απο τα δεδομενα του mockaroo δεν μπορουμε να κανουμε κατι. Ετσι εφτιαξα ολες τις ωρες και την διαφορα τους(scheduled_duration)  χειροκινητα
-	--scheduled_duration INTERVAL, --NOT NULL GENERATED ALWAYS AS (scheduled_arrival_time - scheduled_departure_time) STORED,
-	flight_id INT UNIQUE NOT NULL,
-
 	CHECK (scheduled_arrival_time > scheduled_departure_time),
 
 	FOREIGN KEY (flight_id) REFERENCES flight(flight_id),
