@@ -132,7 +132,7 @@ CREATE TABLE boarding_pass
 
 	FOREIGN KEY (ticket_no) REFERENCES ticket(ticket_no) ON DELETE CASCADE,
 	FOREIGN KEY (flight_id) REFERENCES flight(flight_id) ON DELETE CASCADE,
-	PRIMARY KEY (flight_id, seat_no, boarding_no)
+	PRIMARY KEY (flight_id, seat_no)
 );
 
 -- Sample data
