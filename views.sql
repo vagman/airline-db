@@ -1,7 +1,8 @@
 -- Flights_View: 
 CREATE VIEW Flights_View AS
 SELECT F.flight_id, F.departure_airport, DAir.airport_name as departure_airport_name, DAir.city AS departure_city, F.arrival_airport, AAir.airport_name as arrival_airport_name, AAir.city AS arrival_city, D.scheduled_departure_time, A.actual_departure_time, D.scheduled_arrival_time, A.actual_arrival_time, D.scheduled_duration, 
-A.actual_arrival_time - A.actual_departure_time AS actual_duration
+(SELECT (EXTRACT(epoch FROM(SELECT (A.actual_arrival_time - A.actual_departure_time)))/3600)::float) as actual_duration
+
 FROM flight AS F 
 JOIN duration AS D ON D.flight_id = F.flight_id
 JOIN actual_status AS A ON A.flight_id = F.flight_id

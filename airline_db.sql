@@ -137,31 +137,32 @@ CREATE TABLE boarding_pass
 
 -- Sample data
 COPY booking FROM 'C:\database-class\data\booking.csv' DELIMITER ',' CSV HEADER;  --1st --352 registers
-SELECT * FROM booking;
-
 COPY model FROM 'C:\database-class\data\model.csv' DELIMITER ',' CSV HEADER;  --2nd --5 registers
-SELECT * FROM model;
-
 COPY aircraft FROM 'C:\database-class\data\aircraft.csv' DELIMITER ',' CSV HEADER;  --3rd --30 registers
-SELECT * FROM aircraft;
-
 COPY airport FROM 'C:\database-class\data\airport.csv' DELIMITER ',' CSV HEADER;   --4th  --8 registers
-SELECT * FROM airport;
-
 COPY passenger FROM 'C:\database-class\data\passenger.csv' DELIMITER ',' CSV HEADER;  --5th  --472 registers
-SELECT * FROM passenger;
-
 COPY flight FROM 'C:\database-class\data\flight.csv' DELIMITER ',' CSV HEADER; --6th --85 registers
-SELECT * FROM flight;
-
 COPY actual_status FROM 'C:\database-class\data\actual_status.csv' DELIMITER ',' CSV HEADER; --7th --85 registers
-SELECT * FROM actual_status;
-
 COPY duration FROM 'C:\database-class\data\duration.csv' DELIMITER ',' CSV HEADER; --8th --85 registers
+COPY ticket FROM 'C:\database-class\data\ticket.csv' DELIMITER ',' CSV HEADER; --9th --470 registers
+COPY boarding_pass FROM 'C:\database-class\data\boarding_pass.csv' DELIMITER ',' CSV HEADER; --10th --470 registers
+
+
+
+SELECT * FROM booking;
+SELECT * FROM model;
+SELECT * FROM aircraft;
+SELECT * FROM airport;
+SELECT * FROM passenger;
+SELECT * FROM flight;
+SELECT * FROM actual_status;
 SELECT * FROM duration;
-
-COPY ticket FROM 'C:\database-class\data\ticket.csv' DELIMITER ',' CSV HEADER; --9th --472 registers
 SELECT * FROM ticket;
-
-COPY boarding_pass FROM 'C:\database-class\data\boarding_pass.csv' DELIMITER ',' CSV HEADER; --10th --472 registers
 SELECT * FROM boarding_pass;
+
+
+
+
+
+
+
