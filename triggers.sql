@@ -16,7 +16,7 @@ CREATE TABLE booking_log
 	log_book_date DATE NOT NULL,
 	log_total_cost MONEY NOT NULL,
 	action_called varchar(1),
-	action_timestamp TIMESTAMPTZ,
+	action_timestamp TIMESTAMP,
 	
 	PRIMARY KEY (log_id)
 );
@@ -25,10 +25,10 @@ CREATE OR REPLACE FUNCTION logger() RETURNS TRIGGER AS $insert_into_log_table$
     BEGIN
     -- Identify the trigger operation through TG_OP
 	IF (TG_OP = 'DELETE') THEN
-        INSERT INTO booking_log VALUES (DEFAULT, OLD.book_ref, OLD.book_date, OLD.total_cost, 'd', now());
+        INSERT INTO booking_log VALUES (DEFAULT, OLD.book_ref, OLD.book_date, OLD.total_cost, 'd', now()::date + to_char(now()::time, 'HH24:MI')::time);
 	-- Updated row has new data stored and not the same as before!
     ELSIF (TG_OP = 'UPDATE' AND OLD.* IS DISTINCT FROM NEW.*) THEN
-		INSERT INTO booking_log VALUES (DEFAULT, OLD.book_ref, OLD.book_date, OLD.total_cost, 'u', now());
+		INSERT INTO booking_log VALUES (DEFAULT, OLD.book_ref, OLD.book_date, OLD.total_cost, 'u', now()::date + to_char(now()::time, 'HH24:MI')::time);
 	END IF;
 	RETURN NEW;
     END 
@@ -55,4 +55,3 @@ select * from booking_log;
 -- αεροδρομίου, κωδικός πτήσης, όνομα επιβάτη, ομαδοποιημένα ανά όνομα επιβάτη και
 -- ημερομηνία αναχώρησης. Χρησιμοποιείστε cursors ώστε να εμφανίσετε τις γραμμές σε
 -- ομάδες των 15.
-
