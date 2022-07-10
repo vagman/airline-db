@@ -205,30 +205,3 @@ while True:
     cursor(str) 
     if(str == 'q'):
         break 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<<<<<<< HEAD
-=======
-# except (Exception, Error) as error:
-#     print("Error while connecting to PostgreSQL", error)
-# finally:
-#     if (connection):
-#         cursor.close()
-#         connection.close()
-#         print("PostgreSQL connection is closed")
->>>>>>> 10366f8d59cae6cd1c8863e39d2de871fb206fdb
