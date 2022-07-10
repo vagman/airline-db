@@ -5,7 +5,6 @@ DB_PASSWORD = "1234"
 
 import psycopg2
 
-
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -18,16 +17,15 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 def cursor(no_of_exercise):
-    
     # Query a
     if(no_of_exercise == 'a' or no_of_exercise == 'A' or no_of_exercise == '1'):
         print("-----------------------\n+++++" + bcolors.OKBLUE + "Query (a)" + bcolors.ENDC + "+++++\n-----------------------")
         try:
-            #for every time i want to return a connection (conn) object
+            
             conn = psycopg2.connect(host = DB_HOST, dbname = DB_NAME, user = DB_USER, password = DB_PASSWORD)
 
-            #DB API (to connect python)
-            #Creating a 'cursor' object for actually working with queries
+            # DB API:
+            # Creating a 'cursor' object for actually working with queries
             cur = conn.cursor()
 
             sqlQueryA = '''SELECT P.passenger_id, P.passenger_name, B.book_date
@@ -216,13 +214,13 @@ def cursor(no_of_exercise):
         if(no_of_exercise == 'q'):
             return
         else:
-            print(bcolors.RED + "Give a right Number of an exercise (for ex. type 'a' or '1' for the 1st query)!" + bcolors.ENDC)
+            print(bcolors.RED + "Give the right number of a query (for example type 'a' or '1' for the 1st query)!" + bcolors.ENDC)
         
 while True: 
     try:
-        str = input("Give the Number of the exercise you want to show (or type 'q' to quit):\n ")    
+        str = input("Give the right number of a query you want to run\nPress 'q' to quit):\n ")    
         cursor(str) 
         if(str == 'q'):
             break 
     except:
-        print(bcolors.RED + "something wrong, if you want to quit type 'q'" + bcolors.ENDC)
+        print(bcolors.RED + "Oops! Something wrong, if you want to quit press 'q'" + bcolors.ENDC)

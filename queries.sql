@@ -44,12 +44,12 @@ LIMIT 5;
 
 -- e. Βρείτε τους 5 πιο δημοφιλείς προορισμούς μέσα στο 2022, δηλαδή τις πόλεις προς τις
 -- οποίες ταξίδεψαν οι περισσότεροι επιβάτες.
-SELECT A.city, COUNT(*) AS appears
+SELECT A.city, COUNT(*) AS total_passengers
 FROM flight AS F
 JOIN airport AS A ON A.airport_code = F.arrival_airport
 WHERE EXTRACT(YEAR FROM F.departure_date) = 2022
 GROUP BY A.city
-ORDER BY appears DESC
+ORDER BY total_passengers DESC
 LIMIT 5;
 
 -- f. Βρείτε τους πιο «γρήγορους» επιβάτες, δηλαδή αυτούς που έκαναν check-in πρώτοι για

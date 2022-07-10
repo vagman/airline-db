@@ -25,9 +25,11 @@ CREATE OR REPLACE FUNCTION logger() RETURNS TRIGGER AS $insert_into_log_table$
     BEGIN
     -- Identify the trigger operation through TG_OP
 	IF (TG_OP = 'DELETE') THEN
+		raise notice 'DELETE query was executed sucessfully to booking table. Inserting log data into booking_log table';
         INSERT INTO booking_log VALUES (DEFAULT, OLD.book_ref, OLD.book_date, OLD.total_cost, 'd', now()::date + to_char(now()::time, 'HH24:MI')::time);
 	-- Updated row has new data stored and not the same as before!
     ELSIF (TG_OP = 'UPDATE' AND OLD.* IS DISTINCT FROM NEW.*) THEN
+		raise notice 'UPDATE query was executed sucessfully to booking table. Inserting log data into booking_log table';
 		INSERT INTO booking_log VALUES (DEFAULT, OLD.book_ref, OLD.book_date, OLD.total_cost, 'u', now()::date + to_char(now()::time, 'HH24:MI')::time);
 	END IF;
 	RETURN NEW;
@@ -55,3 +57,35 @@ select * from booking_log;
 -- αεροδρομίου, κωδικός πτήσης, όνομα επιβάτη, ομαδοποιημένα ανά όνομα επιβάτη και
 -- ημερομηνία αναχώρησης. Χρησιμοποιείστε cursors ώστε να εμφανίσετε τις γραμμές σε
 -- ομάδες των 15.
+CREATE OR REPLACE FUNCTION get_passenger_cursor()
+RETURNS table(passenger_name VARCHAR(100), 
+			  scheduled_departure_time timestamptz, 
+			  scheduled_arrival_time timestamptz, 
+			  departure_date DATE, 
+			  departure_airport VARCHAR(3),
+			  arrival_airport VARCHAR(3), 
+			  flight_id int
+			 )
+as $$
+	declare
+		cursor_passenger cursor;
+
+	begin 
+		-- open the cursor
+		open cursor_passenger;
+
+		return query
+		SELECT P.passenger_name, D.scheduled_departure_time, D.scheduled_arrival_time, F.departure_date, F.departure_airport, F.arrival_airport, F.flight_id
+		FROM  flight AS F
+		JOIN duration AS D ON D.flight_id = F.flight_id
+		JOIN airport AS AAir ON Aair.airport_code = F.arrival_airport
+		JOIN airport AS DAir ON Dair.airport_code = F.departure_airport
+		JOIN ticket AS T ON T.flight_id = F.flight_id
+		JOIN passenger AS P ON P.passenger_id = T.passenger_id 
+		GROUP BY P.passenger_name, D.scheduled_departure_time, F.departure_date, F.departure_airport, F.arrival_airport, F.flight_id, D.scheduled_arrival_time;
+	end; $$
+	-- close the cursor
+	close cursor_passenger;
+LANGUAGE plpgsql;
+
+SELECT get_passenger_cursor();
