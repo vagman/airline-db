@@ -157,3 +157,8 @@ SELECT * FROM actual_status;
 SELECT * FROM duration;
 SELECT * FROM ticket;
 SELECT * FROM boarding_pass;
+
+
+--TO DOs
+-- 1 --
+--COPY commands for mac / eite na ta svisoume eite na valoume copy commands gia mac, eite na vroume kapoia universal ekdoxi kodika
