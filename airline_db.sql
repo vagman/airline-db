@@ -147,18 +147,3 @@ COPY duration FROM 'C:\database-class\data\duration.csv' DELIMITER ',' CSV HEADE
 COPY ticket FROM 'C:\database-class\data\ticket.csv' DELIMITER ',' CSV HEADER; --9th --470 registers
 COPY boarding_pass FROM 'C:\database-class\data\boarding_pass.csv' DELIMITER ',' CSV HEADER; --10th --470 registers
 
-SELECT * FROM booking;
-SELECT * FROM model;
-SELECT * FROM aircraft;
-SELECT * FROM airport;
-SELECT * FROM passenger;
-SELECT * FROM flight;
-SELECT * FROM actual_status;
-SELECT * FROM duration;
-SELECT * FROM ticket;
-SELECT * FROM boarding_pass;
-
-
---TO DOs
--- 1 --
---COPY commands for mac / eite na ta svisoume eite na valoume copy commands gia mac, eite na vroume kapoia universal ekdoxi kodika
