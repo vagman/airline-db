@@ -225,4 +225,4 @@ while True:
         if(str == 'q'):
             break 
     except:
-        print(bcolors.RED + "something wrong" + bcolors.ENDC)
+        print(bcolors.RED + "something wrong, if you want to quit type 'q'" + bcolors.ENDC)
