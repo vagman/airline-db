@@ -77,7 +77,7 @@ def cursor(no_of_exercise):
             cur.close()
     elif(no_of_exercise == 'd' or no_of_exercise == 'D'):
         print("d")
-        try:
+        try: 
             #for every time i want to return a connection (conn) object
             conn = psycopg2.connect(host = DB_HOST, dbname = DB_NAME, user = DB_USER, password = DB_PASSWORD)
 
