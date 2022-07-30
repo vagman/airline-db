@@ -1,9 +1,9 @@
+import psycopg2
+
 DB_HOST = "localhost"
 DB_NAME = "airline"
 DB_USER = "postgres"
 DB_PASSWORD = "1234"
-
-import psycopg2
 
 class bcolors:
     HEADER = '\033[95m'
@@ -16,18 +16,13 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-def cursor(no_of_exercise):
-    # Query a
-    if(no_of_exercise == 'a' or no_of_exercise == 'A' or no_of_exercise == '1'):
+def cursor(query):
+    # Query A
+    if(query.lower() == 'a' or query == '1'):
         print("-----------------------\n+++++" + bcolors.OKBLUE + "Query (a)" + bcolors.ENDC + "+++++\n-----------------------")
-        try:
-            
+        try:      
             conn = psycopg2.connect(host = DB_HOST, dbname = DB_NAME, user = DB_USER, password = DB_PASSWORD)
-
-            # DB API:
-            # Creating a 'cursor' object for actually working with queries
             cur = conn.cursor()
-
             sqlQueryA = '''SELECT P.passenger_id, P.passenger_name, B.book_date
                     FROM flight AS F 
                     JOIN ticket AS T ON F.flight_id = T.flight_id
@@ -45,20 +40,17 @@ def cursor(no_of_exercise):
                 print(table)
             print("\n")
         except:
-            print("Something gets wrong")
+            print("Something went wrong")
         finally:
             conn.close()
             cur.close()
             
     # Query B
-    elif(no_of_exercise == 'b' or no_of_exercise == 'B') or no_of_exercise == '2':
+    elif query.lower() == 'b' or query == '2' :
         print("-----------------------\n+++++" + bcolors.OKBLUE + "Query (b)" + bcolors.ENDC + "+++++\n-----------------------")
         try:
-            #for every time i want to return a connection (conn) object
             conn = psycopg2.connect(host = DB_HOST, dbname = DB_NAME, user = DB_USER, password = DB_PASSWORD)
 
-            #DB API (to connect python)
-            #Creating a 'cursor' object for actually working with queries
             cur = conn.cursor()
 
             sqlQueryB = '''SELECT M.capacity AS total_seats, COUNT(*) AS reserved_seats, M.capacity - COUNT(*) AS blank_seats
@@ -76,22 +68,17 @@ def cursor(no_of_exercise):
                 print(table)
             print("\n")
         except:
-            print("Something gets wrong")
+            print("Something went wrong")
         finally:
             conn.close()
             cur.close()
             
     # Query c
-    elif(no_of_exercise == 'c' or no_of_exercise == 'C' or no_of_exercise == '3'):
+    elif query.lower() == 'c' or query == '3':
         print("-----------------------\n+++++" + bcolors.OKBLUE + "Query (c)" + bcolors.ENDC + "+++++\n-----------------------")
         try:
-            #for every time i want to return a connection (conn) object
             conn = psycopg2.connect(host = DB_HOST, dbname = DB_NAME, user = DB_USER, password = DB_PASSWORD)
-
-            #DB API (to connect python)
-            #Creating a 'cursor' object for actually working with queries
             cur = conn.cursor()
-
             sqlQueryC = '''SELECT F.flight_id, (SELECT (EXTRACT(epoch FROM(SELECT (A.actual_arrival_time - A.actual_departure_time)))/3600)::float) AS delay_in_hours, F.departure_date 
                         FROM flight AS F
                         JOIN actual_status AS A ON A.flight_id = F.flight_id
@@ -108,22 +95,17 @@ def cursor(no_of_exercise):
                 print(table)
             print("\n")
         except:
-            print("Something gets wrong")
+            print("Something went wrong")
         finally:
             conn.close()
             cur.close()
             
-    # Query d       
-    elif(no_of_exercise == 'd' or no_of_exercise == 'D' or no_of_exercise == '4'):
+    # Query D    
+    elif query.lower() == 'd' or query == '4':
         print("-----------------------\n+++++" + bcolors.OKBLUE + "Query (d)" + bcolors.ENDC + "+++++\n-----------------------")
         try: 
-            #for every time i want to return a connection (conn) object
             conn = psycopg2.connect(host = DB_HOST, dbname = DB_NAME, user = DB_USER, password = DB_PASSWORD)
-
-            #DB API (to connect python)
-            #Creating a 'cursor' object for actually working with queries
             cur = conn.cursor()
-
             sqlQueryD = '''SELECT P.passenger_id, P.passenger_name, sum(F.flight_range) AS total_km_flown
                             FROM flight AS F
                             JOIN ticket AS T ON T.flight_id = F.flight_id
@@ -140,22 +122,17 @@ def cursor(no_of_exercise):
                 print(table)
             print("\n")
         except:
-            print("Something gets wrong")
+            print("Something went wrong")
         finally:
             conn.close()
             cur.close()
             
-    # Query e
-    elif(no_of_exercise == 'e' or no_of_exercise == 'E' or no_of_exercise == '5'):
+    # Query E
+    elif query.lower() == 'e' or query == '5':
         print("-----------------------\n+++++" + bcolors.OKBLUE + "Query (e)" + bcolors.ENDC + "+++++\n-----------------------")
         try:
-            #for every time i want to return a connection (conn) object
             conn = psycopg2.connect(host = DB_HOST, dbname = DB_NAME, user = DB_USER, password = DB_PASSWORD)
-
-            #DB API (to connect python)
-            #Creating a 'cursor' object for actually working with queries
             cur = conn.cursor()
-
             sqlQueryE = '''SELECT A.city, COUNT(*) AS appears
                             FROM flight AS F
                             JOIN airport AS A ON A.airport_code = F.arrival_airport
@@ -171,23 +148,17 @@ def cursor(no_of_exercise):
                 print(table)
             print("\n")
         except:
-            print("Something gets wrong")
+            print("Something went wrong")
         finally:
             conn.close()
             cur.close()
             
-    # Query f
-    elif(no_of_exercise == 'f' or no_of_exercise == 'F' or no_of_exercise == '6'):
+    # Query F
+    elif query.lower() == 'f' or query == '6':
         print("-----------------------\n+++++" + bcolors.OKBLUE + "Query (f)" + bcolors.ENDC + "+++++\n-----------------------")
         try:
-            #for every time i want to return a connection (conn) object
             conn = psycopg2.connect(host = DB_HOST, dbname = DB_NAME, user = DB_USER, password = DB_PASSWORD)
-
-            #DB API (to connect python)
-            #Creating a 'cursor' object for actually working with queries
             cur = conn.cursor()
-
-
             sqlQueryF = '''SELECT T.passenger_id, P.passenger_name, 
                             COUNT(T.passenger_id) AS passengers_total_flights, 
                             ROUND(CAST(AVG(B.boarding_no) AS numeric), 1) AS average_boarding_que
@@ -206,12 +177,12 @@ def cursor(no_of_exercise):
                 print(table)
             print("\n")
         except:
-            print("Something gets wrong")
+            print("Something went wrong")
         finally:
             conn.close()
             cur.close()
     else:
-        if(no_of_exercise == 'q'):
+        if(query == 'q'):
             return
         else:
             print(bcolors.RED + "Give the right number of a query (for example type 'a' or '1' for the 1st query)!" + bcolors.ENDC)

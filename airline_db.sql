@@ -54,7 +54,7 @@ CREATE TABLE passenger
 	passenger_name VARCHAR(100) NOT NULL,
 	contact_data VARCHAR(15) NOT NULL,
 
-	--CHECK(contact_data::text ~* '^[0-9]{10}$'),
+	CHECK(contact_data::text ~* '^[0-9]{10}$'),
 
 	PRIMARY KEY (passenger_id)
 );
@@ -83,7 +83,6 @@ CREATE TABLE actual_status
 	flight_status VARCHAR(9) NOT NULL,
 	actual_departure_time TIMESTAMPTZ,
 	actual_arrival_time TIMESTAMPTZ,
-	--departure_date DATE, --einai to scheduled_departure_time opote kai na ginei Cancelled mia ptisi den mas peirazei. Emeis mesw tou departure_date KAI tou flight_id mporoyme na prosdiorisoume ta upoloipa
 
 	CHECK (flight_status IN ('Scheduled', 'OnTime', 'Delayed', 'Departed', 'Arrived', 'Cancelled')),
 
@@ -113,7 +112,6 @@ CREATE TABLE ticket
 	flight_id INT NOT NULL, 
 	passenger_id VARCHAR(10) NOT NULL,
 
-	--CHECK (ticket_no ~* '^\d{13}$'),
 	CHECK (fare IN ('Economy', 'Business', 'First class')),
 	CHECK (amount::numeric::int > 0),
 
@@ -136,14 +134,13 @@ CREATE TABLE boarding_pass
 );
 
 -- Sample data
-COPY booking FROM 'C:\database-class\data\booking.csv' DELIMITER ',' CSV HEADER;  --1st --352 registers
-COPY model FROM 'C:\database-class\data\model.csv' DELIMITER ',' CSV HEADER;  --2nd --5 registers
-COPY aircraft FROM 'C:\database-class\data\aircraft.csv' DELIMITER ',' CSV HEADER;  --3rd --30 registers
-COPY airport FROM 'C:\database-class\data\airport.csv' DELIMITER ',' CSV HEADER;   --4th  --8 registers
-COPY passenger FROM 'C:\database-class\data\passenger.csv' DELIMITER ',' CSV HEADER;  --5th  --472 registers
-COPY flight FROM 'C:\database-class\data\flight.csv' DELIMITER ',' CSV HEADER; --6th --85 registers
-COPY actual_status FROM 'C:\database-class\data\actual_status.csv' DELIMITER ',' CSV HEADER; --7th --85 registers
-COPY duration FROM 'C:\database-class\data\duration.csv' DELIMITER ',' CSV HEADER; --8th --85 registers
-COPY ticket FROM 'C:\database-class\data\ticket.csv' DELIMITER ',' CSV HEADER; --9th --470 registers
-COPY boarding_pass FROM 'C:\database-class\data\boarding_pass.csv' DELIMITER ',' CSV HEADER; --10th --470 registers
-
+COPY booking FROM 'C:\database-class\data\booking.csv' DELIMITER ',' CSV HEADER;
+COPY model FROM 'C:\database-class\data\model.csv' DELIMITER ',' CSV HEADER;
+COPY aircraft FROM 'C:\database-class\data\aircraft.csv' DELIMITER ',' CSV HEADER;
+COPY airport FROM 'C:\database-class\data\airport.csv' DELIMITER ',' CSV HEADER;
+COPY passenger FROM 'C:\database-class\data\passenger.csv' DELIMITER ',' CSV HEADER;
+COPY flight FROM 'C:\database-class\data\flight.csv' DELIMITER ',' CSV HEADER;
+COPY actual_status FROM 'C:\database-class\data\actual_status.csv' DELIMITER ',' CSV HEADER;
+COPY duration FROM 'C:\database-class\data\duration.csv' DELIMITER ',' CSV HEADER;
+COPY ticket FROM 'C:\database-class\data\ticket.csv' DELIMITER ',' CSV HEADER;
+COPY boarding_pass FROM 'C:\database-class\data\boarding_pass.csv' DELIMITER ',' CSV HEADER;

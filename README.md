@@ -1,2 +1,2 @@
 # Airline Database
-In this course assignment (Databases, 4th semester) we were asked to implement a relational database of an airline where there will be stores the various information needed for it in order to function properly such as: reservations, tickets, boarding passes, airports, flights etc.
+In this course assignment (Databases, 4th semester) we were asked to implement a relational database of an airline company. In the database are stored various information needed for it in order to function properly such as: reservations, tickets, boarding passes, airports, flights etc. You can read the whole assignment given to us, in Greek, [here](https://github.com/vagman/database-class/blob/main/assignment/assignment2022.pdf).

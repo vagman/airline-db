@@ -30,7 +30,6 @@ WHERE EXTRACT(YEAR FROM F.departure_date) = 2022
 ORDER BY delay_in_hours DESC
 LIMIT 5;
 
-
 -- d. Βρείτε τους 5 πιο συχνούς ταξιδιώτες (frequent travelers) μέσα στο 2022, δηλαδή αυτούς
 -- που έκαναν τα περισσότερα χιλιόμετρα πτήσεων.
 SELECT P.passenger_id, P.passenger_name, sum(F.flight_range) AS total_km_flown
